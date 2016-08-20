@@ -1,0 +1,56 @@
+\documentclass[twocolumn]{revtex4}
+
+\usepackage{natbib}
+\usepackage{verbatim}
+
+\begin{document}
+
+\title{Documentation}
+\maketitle
+
+This document provides information about the software that was used to investigate non-Poisson continuous time random walks in our paper \cite{hoffmann}. We discuss the requirements necessary to run the software in section \ref{sec:requirements} and provide an outline of the components of the software in section \ref{sec:components}.
+\section{Requirements \& setup}\label{sec:requirements}
+
+The software is based on a number of libraries that need to be installed before the software can be run. In particular, you will need to have the following software installed on your machine
+\begin{itemize}
+	\item Python 2.6 or later (but not the 3.* version of python which is not backwards compatible) \cite{python},
+	\item Numpy and Scipy \cite{scipy},
+	\item NetworkX \cite{networkx},
+	\item (MatPlotLib \cite{matplotlib} is required to run the example).
+\end{itemize}
+
+The easiest way to install all of the above is to use the free Enthought Python Distribution \cite{enthought} which is available for all major operating systems. After having installed the Enthought package you can install NetworkX by issuing the command
+\begin{verbatim}
+sudo easy_install networkx
+\end{verbatim}
+
+We have implemented parts of the software in C because evaluating the probability distribution functions associated with the waiting times can be computationally intensive. You need to compile the C source before being able to run the software by executing the following steps
+\begin{enumerate}
+	\item Issue the command \\{\tt python \_distributionssetup.py}
+	\item Navigate to the build directory and copy the compiled file into the source directory such that it is visible to the python implementation. For example, on a Mac OSX system the compilation process creates a file {\tt \_distributions.so} in the folder {\tt <source directory>/build/lib.macosx-10.5-i386-2.7/}. The file {\tt \_distributions.so} needs to be copied into the source directory.
+	
+You should be ready to go!
+\end{enumerate}
+
+\section{Components}\label{sec:components}
+
+Each file contains commentary to explain its functionality. Thus, we will only give a brief summary of each file's content here.
+
+{\tt \_distributions.c} contains C implementations to evaluate probability distribution functions and cumulative distribution functions quickly.
+
+{\tt \_distributionssetup.py} is a helper script that you can use to compile the C source. It will create a library file which you need to copy to the source directory.
+
+{\tt distributions.py} is a python wrapper for the C library and defines probability distribution functions as classes.
+
+{\tt walker.py} contains the main functionality of the software which can be categorized into two groups
+\begin{itemize}
+	\item Monte-Carlo simulations that approximate the walker density on networks by generating a large number of random walks,
+	\item Calculation of effective transition matrices and resting times to obtain steady state solutions.
+\end{itemize}
+
+{\tt example.py} is a self-explanatory example. It creates a toy network of three nodes, approximates the walker density through simulations and obtains the steady-state solution explicitly.
+
+\bibliographystyle{plainnat}
+\bibliography{readme}
+
+\end{document}
